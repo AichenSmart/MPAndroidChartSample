@@ -12,10 +12,10 @@ import android.view.View;
 import android.widget.*;
 
 public class MainActivity extends AppCompatActivity {
-    private Button web_Btn;
-    private ListView listGraph;
-    private EditText ed_Search;
-    String[] name = {"雷达图", "折线图", "曲线图", "柱状图", "xx图", "xx图", "xx图", "xx图", "xx图", "xx图"};
+    private Button mWebBtn;
+    private ListView mListGraph;
+    private EditText mEditTextSearch;
+    String[] names = {"雷达图", "折线图", "曲线图", "柱状图", "xx图", "xx图", "xx图", "xx图", "xx图", "xx图"};
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -24,17 +24,18 @@ public class MainActivity extends AppCompatActivity {
         initView();
         event();
         ListControl();
-        web_Btn.setOnClickListener(new View.OnClickListener() {
+        mWebBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Intent intent=new Intent(MainActivity.this,WebView_sea.class);
-                String url= "http://"+ed_Search.getText()+".com";
+                String url= "http://"+mEditTextSearch.getText()+".com";
                 intent.putExtra("URL",url);
                 startActivity(intent);
             }
         });
 
-        //系统自带
+
+
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
@@ -47,35 +48,33 @@ public class MainActivity extends AppCompatActivity {
             }
         });
     }
-
     //以后规范会之后集中放置点击事件
     public void event() {
     }
-
     //对listview的一系列操作先集中放置在这里。
     public void ListControl() {
-        listGraph.setAdapter(new ArrayAdapter<String>(this, android.R.layout.simple_expandable_list_item_1, name));
-        listGraph.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+        mListGraph.setAdapter(new ArrayAdapter<String>(this, android.R.layout.simple_expandable_list_item_1, names));
+        mListGraph.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> arg0, View arg1, int arg2, long arg3) {
-                if (name[arg2].equals("雷达图")) {
+                if (names[arg2].equals("雷达图")) {
                     Intent intent = new Intent(MainActivity.this, Graph.class);
-                    intent.putExtra("样式",name[arg2]);
+                    intent.putExtra("样式",names[arg2]);
                     startActivity(intent);
                 }
-                if (name[arg2].equals("折线图")) {
+                if (names[arg2].equals("折线图")) {
                     Intent intent = new Intent(MainActivity.this, Graph.class);
-                    intent.putExtra("样式",name[arg2]);
+                    intent.putExtra("样式",names[arg2]);
                     startActivity(intent);
                 }
-                if (name[arg2].equals("曲线图")) {
+                if (names[arg2].equals("曲线图")) {
                     Intent intent = new Intent(MainActivity.this, Graph.class);
-                    intent.putExtra("样式",name[arg2]);
+                    intent.putExtra("样式",names[arg2]);
                     startActivity(intent);
                 }
-                if (name[arg2].equals("柱状图")) {
+                if (names[arg2].equals("柱状图")) {
                     Intent intent = new Intent(MainActivity.this, Graph.class);
-                    intent.putExtra("样式",name[arg2]);
+                    intent.putExtra("样式",names[arg2]);
                     startActivity(intent);
                 }
             }
@@ -84,9 +83,9 @@ public class MainActivity extends AppCompatActivity {
 
     //试图初始化
     public void initView() {
-        listGraph = (ListView) findViewById(R.id.GraphList);
-        ed_Search = (EditText) findViewById(R.id.Ed_search);
-        web_Btn=(Button) findViewById(R.id.btnGraph);
+        mListGraph = (ListView) findViewById(R.id.GraphList);
+        mEditTextSearch = (EditText) findViewById(R.id.Ed_search);
+        mWebBtn=(Button) findViewById(R.id.btnGraph);
     }
 
     @Override

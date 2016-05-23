@@ -10,11 +10,11 @@ import android.widget.ImageView;
  */
 public class Graph extends AppCompatActivity {
     //暂时用图片代替坐标系
-    private ImageView imageView;
+    private ImageView mImageView;
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.graph);
+        setContentView(R.layout.graph_window);
         initView();
         viewControl();
     }
@@ -23,17 +23,17 @@ public class Graph extends AppCompatActivity {
         String nameImg=bundle.getString("样式");
         //暂时没做坐标系，先用图表代替。
         if(nameImg.equals("雷达图")){
-            imageView.setImageResource(R.drawable.g);
+            mImageView.setImageResource(R.drawable.g);
         }
         if(nameImg.equals("折线图")){
-            imageView.setImageResource(R.drawable.xhr);
+            mImageView.setImageResource(R.drawable.xhr);
         }
         if(nameImg.equals("曲线图")){
-            imageView.setImageResource(R.drawable.xx);
+            mImageView.setImageResource(R.drawable.xx);
         }
 
     }
     public void initView(){
-        imageView=(ImageView) findViewById(R.id.iv);
+        mImageView=(ImageView) findViewById(R.id.iv);
     }
 }
