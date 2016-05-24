@@ -4,6 +4,7 @@ import android.graphics.Typeface;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
+import com.github.mikephil.charting.animation.Easing;
 import com.github.mikephil.charting.charts.RadarChart;
 import com.github.mikephil.charting.components.Legend;
 import com.github.mikephil.charting.components.XAxis;
@@ -19,96 +20,96 @@ import java.util.ArrayList;
 /**
  * Created by Administrator on 2016/5/20.
  */
-public class Graph extends AppCompatActivity {
+public class RadarGraph extends AppCompatActivity {
     //暂时用图片代替坐标系
     private RadarChart mChart;
     private Typeface tf;
-    private String[] mParties = new String[] {
-            "Party A", "Party B", "Party C", "Party D", "Party E", "Party F", "Party G", "Party H",
-            "Party I"
-    };
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.graph_window);
+        setContentView(R.layout.graph_radarchart);
         initView();
         viewControl();
     }
     public void viewControl(){
-        Bundle bundle = this.getIntent().getExtras();;
-        String nameImg=bundle.getString("样式");
-        //暂时没做坐标系，先用图表代替。
-        if(nameImg.equals("雷达图")){
-            //描述
-            mChart.setDescription("雷达图  ");
-            // 绘制线条宽度，圆形向外辐射的线条
+            mChart.setDescription("");
             mChart.setWebLineWidth(1.5f);
-            // 内部线条宽度，外面的环状线条
-            mChart.setWebLineWidthInner(1.0f);
-            // 所有线条WebLine透明度
+            mChart.setWebLineWidthInner(0.75f);
             mChart.setWebAlpha(100);
             setData();
+            mChart.animateXY(
+                    1400, 1400,
+                    Easing.EasingOption.EaseInOutQuad,
+                    Easing.EasingOption.EaseInOutQuad);
 
             XAxis xAxis = mChart.getXAxis();
-            xAxis.setTypeface(tf); // x坐标值样式
-            xAxis.setTextSize(12f);
+            xAxis.setTypeface(tf);
+            xAxis.setTextSize(9f);
+
             YAxis yAxis = mChart.getYAxis();
             yAxis.setTypeface(tf);
-            yAxis.setLabelCount(6, false);
-            yAxis.setTextSize(15f);
-            yAxis.setStartAtZero(true);
+            yAxis.setLabelCount(5, false);
+            yAxis.setTextSize(9f);
+            yAxis.setAxisMinValue(0f);
+
             Legend l = mChart.getLegend();
-            l.setPosition(Legend.LegendPosition.LEFT_OF_CHART);
+            l.setPosition(Legend.LegendPosition.RIGHT_OF_CHART);
             l.setTypeface(tf);
-            l.setXEntrySpace(2f);
-            l.setYEntrySpace(1f);
-
-        }
-        if(nameImg.equals("折线图")){
-
-        }
-        if(nameImg.equals("曲线图")){
-
-        }
-
+            l.setXEntrySpace(7f);
+            l.setYEntrySpace(5f);
     }
     public void initView(){
         mChart=(RadarChart) findViewById(R.id.radar_chart);
     }
-    public void setData(){
-        float mult  = 150;
+    private String[] mParties = new String[]{
+            "Party A", "Party B", "Party C", "Party D", "Party E", "Party F", "Party G", "Party H",
+            "Party I"
+    };
+    public void setData() {
+
+        float mult = 150;
         int cnt = 9;
+
         ArrayList<Entry> yVals1 = new ArrayList<Entry>();
         ArrayList<Entry> yVals2 = new ArrayList<Entry>();
+
+        // IMPORTANT: In a PieChart, no values (Entry) should have the same
+        // xIndex (even if from different DataSets), since no values can be
+        // drawn above each other.
         for (int i = 0; i < cnt; i++) {
             yVals1.add(new Entry((float) (Math.random() * mult) + mult / 2, i));
         }
+
         for (int i = 0; i < cnt; i++) {
             yVals2.add(new Entry((float) (Math.random() * mult) + mult / 2, i));
         }
+
         ArrayList<String> xVals = new ArrayList<String>();
+
         for (int i = 0; i < cnt; i++)
             xVals.add(mParties[i % mParties.length]);
+
         RadarDataSet set1 = new RadarDataSet(yVals1, "Set 1");
         set1.setColor(ColorTemplate.VORDIPLOM_COLORS[0]);
+        set1.setFillColor(ColorTemplate.VORDIPLOM_COLORS[0]);
         set1.setDrawFilled(true);
         set1.setLineWidth(2f);
+
         RadarDataSet set2 = new RadarDataSet(yVals2, "Set 2");
         set2.setColor(ColorTemplate.VORDIPLOM_COLORS[4]);
+        set2.setFillColor(ColorTemplate.VORDIPLOM_COLORS[4]);
         set2.setDrawFilled(true);
         set2.setLineWidth(2f);
+
         ArrayList<IRadarDataSet> sets = new ArrayList<IRadarDataSet>();
         sets.add(set1);
         sets.add(set2);
 
-
-        RadarData data = new RadarData(xVals,  sets);
-        /* 数据字体样式 */
+        RadarData data = new RadarData(xVals, sets);
+        data.setValueTypeface(tf);
         data.setValueTextSize(8f);
-        // 是否绘制Y值到图表
-        data.setDrawValues(true);
-        mChart.setData(sets);
-
+        data.setDrawValues(false);
+        mChart.setData(data);
         mChart.invalidate();
     }
 

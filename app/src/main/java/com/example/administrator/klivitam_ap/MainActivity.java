@@ -59,24 +59,19 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onItemClick(AdapterView<?> arg0, View arg1, int arg2, long arg3) {
                 if (name[arg2].equals("雷达图")) {
-                    Intent intent = new Intent(MainActivity.this, Graph.class);
-                    intent.putExtra("样式",name[arg2]);
+                    Intent intent = new Intent(MainActivity.this, RadarGraph.class);
                     startActivity(intent);
                 }
                 if (name[arg2].equals("折线图")) {
-                    Intent intent = new Intent(MainActivity.this, Graph.class);
-                    intent.putExtra("样式",name[arg2]);
+                    Intent intent = new Intent(MainActivity.this, LineGraph.class);
                     startActivity(intent);
+
                 }
                 if (name[arg2].equals("曲线图")) {
-                    Intent intent = new Intent(MainActivity.this, Graph.class);
-                    intent.putExtra("样式",name[arg2]);
-                    startActivity(intent);
+
                 }
                 if (name[arg2].equals("柱状图")) {
-                    Intent intent = new Intent(MainActivity.this, Graph.class);
-                    intent.putExtra("样式",name[arg2]);
-                    startActivity(intent);
+
                 }
             }
         });

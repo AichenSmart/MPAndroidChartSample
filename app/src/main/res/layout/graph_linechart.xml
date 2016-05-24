@@ -2,8 +2,14 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent">
-    <com.github.mikephil.charting.charts.RadarChart
-            android:id="@+id/radar_chart"
+    <RelativeLayout android:id="@+id/rader_topbar" android:layout_width="match_parent" android:layout_height="50dp" android:background="#003399">
+        <ImageView android:layout_width="40dp" android:layout_height="40dp" android:src="@drawable/back" android:id="@+id/back_img" android:layout_marginLeft="5dp" android:layout_centerVertical="true"/>
+        <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="雷达图" android:textColor="#ffffff" android:textSize="20sp" android:textStyle="bold" android:layout_centerHorizontal="true" android:layout_centerVertical="true"/>
+    </RelativeLayout>
+    <com.github.mikephil.charting.charts.LineChart
+            android:id="@+id/line_chart"
+            android:layout_above="@+id/ll"
+            android:layout_below="@+id/rader_topbar"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
     />
