@@ -30,3 +30,5 @@ proguard/
 
 # Android Studio captures folder
 captures/
+#IDEA的启动文件
+.idea/
