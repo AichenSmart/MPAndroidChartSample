@@ -1,9 +1,11 @@
 package com.example.administrator.klivitam_ap;
 
-import android.graphics.Typeface;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
+import android.view.View;
+import android.widget.Button;
 import com.github.mikephil.charting.animation.Easing;
 import com.github.mikephil.charting.charts.RadarChart;
 import com.github.mikephil.charting.components.Legend;
@@ -20,17 +22,34 @@ import java.util.ArrayList;
 /**
  * Created by Administrator on 2016/5/20.
  */
-public class RadarGraph extends AppCompatActivity {
-    //暂时用图片代替坐标系
+public class RadarGraph extends AppCompatActivity implements View.OnClickListener{
     private RadarChart mChart;
-    private Typeface tf;
+    private Button mBtn;
+
+    //导入数据的方式
+    private Button feInput; //外部文件导入
+    private Button rdInput; //随机导入
+    private Button arInput; //自己定义数组导入
+    private Button dbInput; //数据库导入
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.graph_radarchart);
         initView();
         viewControl();
+        BtnEvent();
     }
+
+    private void BtnEvent() {
+        mBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(RadarGraph.this,MainActivity.class);
+                startActivity(intent);
+            }
+        });
+    }
+
     public void viewControl(){
             mChart.setDescription("");
             mChart.setWebLineWidth(1.5f);
@@ -43,23 +62,21 @@ public class RadarGraph extends AppCompatActivity {
                     Easing.EasingOption.EaseInOutQuad);
 
             XAxis xAxis = mChart.getXAxis();
-            xAxis.setTypeface(tf);
             xAxis.setTextSize(9f);
 
             YAxis yAxis = mChart.getYAxis();
-            yAxis.setTypeface(tf);
             yAxis.setLabelCount(5, false);
             yAxis.setTextSize(9f);
             yAxis.setAxisMinValue(0f);
 
             Legend l = mChart.getLegend();
             l.setPosition(Legend.LegendPosition.RIGHT_OF_CHART);
-            l.setTypeface(tf);
             l.setXEntrySpace(7f);
             l.setYEntrySpace(5f);
     }
     public void initView(){
         mChart=(RadarChart) findViewById(R.id.radar_chart);
+        mBtn= (Button) findViewById(R.id.back_img);
     }
     private String[] mParties = new String[]{
             "Party A", "Party B", "Party C", "Party D", "Party E", "Party F", "Party G", "Party H",
@@ -106,7 +123,6 @@ public class RadarGraph extends AppCompatActivity {
         sets.add(set2);
 
         RadarData data = new RadarData(xVals, sets);
-        data.setValueTypeface(tf);
         data.setValueTextSize(8f);
         data.setDrawValues(false);
         mChart.setData(data);
@@ -114,4 +130,8 @@ public class RadarGraph extends AppCompatActivity {
     }
 
 
+    @Override
+    public void onClick(View view) {
+
+    }
 }

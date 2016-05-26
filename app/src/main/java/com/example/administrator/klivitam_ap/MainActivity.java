@@ -22,7 +22,6 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         initView();
-        event();
         ListControl();
         web_Btn.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -48,10 +47,6 @@ public class MainActivity extends AppCompatActivity {
         });
     }
 
-    //以后规范会之后集中放置点击事件
-    public void event() {
-    }
-
     //对listview的一系列操作先集中放置在这里。
     public void ListControl() {
         listGraph.setAdapter(new ArrayAdapter<String>(this, android.R.layout.simple_expandable_list_item_1, name));
@@ -65,13 +60,11 @@ public class MainActivity extends AppCompatActivity {
                 if (name[arg2].equals("折线图")) {
                     Intent intent = new Intent(MainActivity.this, LineGraph.class);
                     startActivity(intent);
-
                 }
                 if (name[arg2].equals("曲线图")) {
-
-                }
-                if (name[arg2].equals("柱状图")) {
-
+                    Intent intent = new Intent(MainActivity.this, MainActivity.class);
+                    finish();
+                    startActivity(intent);
                 }
             }
         });
