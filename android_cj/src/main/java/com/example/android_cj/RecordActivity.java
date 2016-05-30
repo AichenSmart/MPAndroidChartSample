@@ -1,11 +1,16 @@
 package com.example.android_cj;
 
+import android.bluetooth.BluetoothAdapter;
+import android.bluetooth.BluetoothDevice;
+import android.content.*;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.os.SystemClock;
 import android.support.annotation.Nullable;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.util.DisplayMetrics;
+import android.util.Log;
 import android.view.View;
 import android.widget.*;
 import com.github.mikephil.charting.charts.LineChart;
@@ -20,24 +25,27 @@ import com.github.mikephil.charting.interfaces.datasets.ILineDataSet;
 import com.github.mikephil.charting.utils.ColorTemplate;
 
 import java.util.ArrayList;
+import java.util.Set;
 import java.util.Timer;
+
+import static android.R.attr.data;
 
 /**
  * Created by Administrator on 2016/5/26.
  */
-public class RecordActivity extends AppCompatActivity implements View.OnClickListener{
+public class RecordActivity extends AppCompatActivity implements View.OnClickListener {
     private XAxis xAxis;         //X坐标轴
     private YAxis yAxis;         //Y坐标轴
     private Timer timer = new Timer(true);
-/*    private Handler handler  = new Handler(){
-        public void handleMessage(Message msg) {
-            super.handleMessage(msg);
-            if(msg.what == 1){
-                getLineData(20 + 1);
-                mLineChart.invalidate();
+    /*    private Handler handler  = new Handler(){
+            public void handleMessage(Message msg) {
+                super.handleMessage(msg);
+                if(msg.what == 1){
+                    getLineData(20 + 1);
+                    mLineChart.invalidate();
+                }
             }
-        }
-    };*/
+        };*/
     private TextView mFood;
     private ImageView mFoodImage;
     private ImageView mImage;
@@ -49,14 +57,48 @@ public class RecordActivity extends AppCompatActivity implements View.OnClickLis
     public ArrayList<Entry> y = new ArrayList<Entry>();
     public ArrayList<ILineDataSet> lineDataSets = new ArrayList<ILineDataSet>();
     public LineData lineData = null;
+    private ArrayList<String> mArrayAdapter;
+
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.record_main);
         initView();
+        bluetoothControl();
         eventView();
         LineData resultLineData = getLineData(20);
         showChart();
+    }
+
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        switch (resultCode) { //resultCode为回传的标记，我在B中回传的是RESULT_OK
+            case RESULT_CANCELED:
+                finish();
+                break;
+            default:
+                break;
+        }
+    }
+
+    private void bluetoothControl() {
+        BluetoothAdapter mBluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
+        if (mBluetoothAdapter == null) {
+        }
+        if (!mBluetoothAdapter.isEnabled()) {
+            final int REQUEST_ENABLE_BT = 1;
+            AlertDialog.Builder builder = new AlertDialog.Builder(RecordActivity.this);
+            builder.setMessage("是否开启蓝牙？");
+            builder.setTitle("提示");
+            builder.setPositiveButton("去开启", new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
+                    dialog.dismiss();
+                    Intent enableBtIntent = new Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE);
+                    startActivityForResult(enableBtIntent, REQUEST_ENABLE_BT);
+                }
+            });
+            builder.create().show();
+        }
     }
     private LineData getLineData(int count) {
         for (int i = 0; i < count; i++) {  //X轴显示的数据
@@ -76,9 +118,10 @@ public class RecordActivity extends AppCompatActivity implements View.OnClickLis
         lineDataSet.setCircleSize(Color.BLUE);//圆形颜色
         lineDataSet.setHighLightColor(Color.BLACK);//高度线的颜色
         lineDataSets.add(lineDataSet);
-        lineData = new LineData(x,lineDataSets);
+        lineData = new LineData(x, lineDataSets);
         return lineData;
     }
+
     public void showChart() {
 
         mLineChart.setVisibleXRangeMaximum(8);
@@ -142,44 +185,45 @@ public class RecordActivity extends AppCompatActivity implements View.OnClickLis
      * 2.屏幕适配
      */
     private void initView() {
-        mImage=(ImageView) findViewById(R.id.top_back);
-        mNextBtn=(Button) findViewById(R.id.next_step);
-        mTimer=(Chronometer) findViewById(R.id.top_time);
-        mLineChart=(LineChart) findViewById(R.id.chart_line);
-        mFoodImage=(ImageView) findViewById(R.id.food_img);
-        mFood=(TextView) findViewById(R.id.food_bz);
+        mImage = (ImageView) findViewById(R.id.top_back);
+        mNextBtn = (Button) findViewById(R.id.next_step);
+        mTimer = (Chronometer) findViewById(R.id.top_time);
+        mLineChart = (LineChart) findViewById(R.id.chart_line);
+        mFoodImage = (ImageView) findViewById(R.id.food_img);
+        mFood = (TextView) findViewById(R.id.food_bz);
         DisplayMetrics metric = new DisplayMetrics();
         getWindowManager().getDefaultDisplay().getMetrics(metric);
         int w = metric.widthPixels;
         int h = metric.heightPixels;
         LinearLayout.LayoutParams image = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT);
-        image.height = h/6;
-        image.width = h/6;
+        image.height = h / 6;
+        image.width = h / 6;
         mFoodImage.setLayoutParams(image);
         LinearLayout.LayoutParams text = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT);
         text.height = h / 4;
-        text.width = w/2;
+        text.width = w / 2;
         mFood.setLayoutParams(text);
     }
 
     /**
      * 记住还没改点击事件的用线程
+     *
      * @param v
      */
 
     @Override
     public void onClick(View v) {
-        switch (v.getId()){
+        switch (v.getId()) {
             case R.id.top_back:
                 finish();
                 break;
             case R.id.next_step:
-                if(mCount==0) {
+                if (mCount == 0) {
                     mNextBtn.setText("下一步");
                     mTimer.start();
                     mCount++;
                 }
-               mTimer.setBase(SystemClock.elapsedRealtime());
+                mTimer.setBase(SystemClock.elapsedRealtime());
                 break;
         }
 

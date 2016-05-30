@@ -2,6 +2,9 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
           package="com.example.android_cj">
 
+    <uses-permission android:name="android.permission.BLUETOOTH" />  //请求连接，接受连接以及交换数据中
+    <uses-permission android:name="android.permission.BLUETOOTH_ADMIN" /> // 其他能力并不应当被使用，除非你的应用是一个电源管理的应用，需要对蓝牙的设置进行修改
+
     <application
             android:allowBackup="true"
             android:icon="@mipmap/ic_launcher"
