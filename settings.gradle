@@ -1,1 +1,1 @@
-include ':app', ':android_collect', ':android_collect'
+include ':app', ':android_cj'
